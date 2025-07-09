@@ -28,8 +28,8 @@ export default function StudentsPage({ students }: Props) {
   });
 
   return (
-    <main className="p-8 max-w-7xl mx-auto bg-gradient-to-b from-blue-50 via-white to-green-50 min-h-screen">
-      <h1 className="text-4xl font-extrabold mb-8 text-blue-700 text-center">🚀 Meet Our Talented Students</h1>
+    <main className="p-8 max-w-7xl mx-auto">
+      <h1 className="text-4xl font-extrabold mb-8 text-blue-700 text-center">🚀 Our Students</h1>
 
       {/* Filter Buttons */}
       <div className="flex flex-wrap gap-4 mb-10 justify-center">
@@ -37,34 +37,34 @@ export default function StudentsPage({ students }: Props) {
           <button
             key={type}
             onClick={() => setFilter(type)}
-            className={`px-5 py-2 rounded-full border-2 font-medium transition shadow ${
-              filter === type ? "bg-blue-600 text-white border-blue-600" : "bg-white text-blue-600 border-blue-600"
-            } hover:bg-blue-500 hover:text-white`}
+            className={`px-4 py-2 rounded-full border font-medium ${
+              filter === type ? "bg-blue-600 text-white" : "bg-white text-blue-600 border-blue-600"
+            } hover:bg-blue-500 hover:text-white transition`}
           >
             {type}
           </button>
         ))}
       </div>
 
-      {/* Students */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {/* Students Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {filteredStudents.map((student) => (
           <div
             key={student._id}
-            className="bg-white bg-opacity-80 border border-blue-100 rounded-xl shadow-xl hover:shadow-2xl hover:scale-[1.02] transition transform p-6 flex flex-col items-center text-center"
+            className="bg-white border rounded-lg shadow hover:shadow-xl transition p-6 flex flex-col items-center text-center"
           >
             <img
               src={student.avatarUrl || "https://i.pravatar.cc/150"}
               alt={student.name}
-              className="w-24 h-24 rounded-full object-cover mb-4 ring-4 ring-blue-300"
+              className="w-24 h-24 rounded-full object-cover mb-4"
             />
-            <h2 className="text-xl font-bold text-gray-800 mb-1">{student.name}</h2>
+            <h2 className="text-xl font-bold mb-1">{student.name}</h2>
             <p className="text-blue-600 font-medium mb-2">{student.specialization}</p>
-            <p className="text-gray-600 mb-4 line-clamp-3">{student.bio || "No bio available."}</p>
+            <p className="text-gray-500 mb-4 line-clamp-3">{student.bio || "No bio available."}</p>
             {student.projects.length > 0 ? (
               <a
                 href={`#projects-${student._id}`}
-                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full mt-auto font-semibold shadow transition"
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition mt-auto"
               >
                 View Projects
               </a>
@@ -78,17 +78,12 @@ export default function StudentsPage({ students }: Props) {
       {/* Projects Sections */}
       {filteredStudents.map((student) =>
         student.projects.length > 0 ? (
-          <section key={student._id} id={`projects-${student._id}`} className="mt-16">
-            <h3 className="text-2xl font-bold mb-4 text-green-700 text-center">{student.name}'s Projects</h3>
-            <ul className="list-disc list-inside text-center">
+          <section key={student._id} id={`projects-${student._id}`} className="mt-12">
+            <h3 className="text-2xl font-bold mb-4 text-green-700">{student.name}'s Projects</h3>
+            <ul className="list-disc list-inside">
               {student.projects.map((proj) => (
                 <li key={proj._id}>
-                  <a
-                    href={proj.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 underline hover:text-blue-800 transition"
-                  >
+                  <a href={proj.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
                     {proj.title}
                   </a>
                 </li>
