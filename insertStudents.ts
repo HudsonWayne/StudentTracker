@@ -1,5 +1,9 @@
+import * as dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
+
 import dbConnect from "./src/lib/db.ts";
 import Student from "./src/models/Student.ts";
+
 
 async function insertStudents() {
   await dbConnect();
