@@ -18,7 +18,7 @@ export default function StudentsPage() {
   if (!data) return <div className="p-6">Loading...</div>;
 
   // Assign fake points for demonstration
-  const studentsWithPoints = data.data.map((student: any, index: number) => ({
+  const studentsWithPoints = data.data.map((student: any) => ({
     ...student,
     points: Math.floor(Math.random() * 100) + 20, // random points from 20 to 120
   }));
@@ -49,11 +49,14 @@ export default function StudentsPage() {
           className="mb-8 px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded shadow transition hover:scale-105 active:scale-95 ml-4"
           data-aos="fade-up"
         >
-          🏆 Show Scoreboard
+          🏆 {showScoreboard ? "Hide" : "Show"} Scoreboard
         </button>
 
         {showScoreboard && (
-          <div className="bg-white border border-gray-300 rounded-lg p-6 mb-8 shadow-xl" data-aos="fade-up">
+          <div
+            className="bg-white border border-gray-300 rounded-lg p-6 mb-8 shadow-xl"
+            data-aos="fade-up"
+          >
             <h2 className="text-2xl font-bold mb-4 text-green-700">🏅 Student Scoreboard</h2>
             <ul className="space-y-2">
               {rankedStudents.map((student, idx) => (
@@ -64,8 +67,16 @@ export default function StudentsPage() {
                   <div>
                     <span className="font-bold">{idx + 1}. {student.name}</span>
                     <span className="ml-2 text-gray-500">({student.specialization})</span>
-                    {idx === 0 && <span className="ml-2 px-2 py-1 bg-yellow-300 text-yellow-900 rounded text-xs">Top Performer ⭐</span>}
-                    {idx === rankedStudents.length - 1 && <span className="ml-2 px-2 py-1 bg-red-300 text-red-800 rounded text-xs">Needs Support 💪</span>}
+                    {idx === 0 && (
+                      <span className="ml-2 px-2 py-1 bg-yellow-300 text-yellow-900 rounded text-xs">
+                        Top Performer ⭐
+                      </span>
+                    )}
+                    {idx === rankedStudents.length - 1 && (
+                      <span className="ml-2 px-2 py-1 bg-red-300 text-red-800 rounded text-xs">
+                        Needs Support 💪
+                      </span>
+                    )}
                   </div>
                   <div className="font-mono text-blue-600">{student.points} pts</div>
                 </li>
