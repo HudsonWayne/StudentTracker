@@ -11,12 +11,15 @@
   "dependencies": {
     "@headlessui/react": "^2.2.4",
     "@heroicons/react": "^2.2.0",
+    "aos": "^2.3.4",
     "dotenv": "^17.2.0",
     "mongoose": "^8.16.1",
     "next": "15.3.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "swr": "^2.3.4"
+    "react-tsparticles": "^2.12.2",
+    "swr": "^2.3.4",
+    "tsparticles": "^3.8.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

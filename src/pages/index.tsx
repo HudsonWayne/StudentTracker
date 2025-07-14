@@ -1,10 +1,8 @@
 import Link from "next/link";
 
-
 export default function Home() {
   return (
     <>
-      
       <main className="relative z-10 min-h-screen bg-gray-50 flex flex-col items-center justify-center p-8 text-center">
         <h1 className="text-5xl font-extrabold mb-4 text-blue-700">🎓 Mufakose Hub</h1>
         <p className="text-xl text-gray-700 mb-6 max-w-2xl">

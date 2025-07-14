@@ -96,7 +96,7 @@ async function insertStudents() {
       employed: false,
       employer: "",
       bio: "Passionate and willing to learn more.",
-      avatarUrl: "/students/tinotenda.jpg",
+      avatarUrl: "/students/tinoboy.jpg",
       projects: [],
     },
     {
