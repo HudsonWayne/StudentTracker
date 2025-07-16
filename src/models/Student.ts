@@ -1,20 +1,14 @@
-import mongoosePkg from "mongoose";
-const { Schema, model, models } = mongoosePkg;
+import mongoose from "mongoose";
 
-const StudentSchema = new Schema(
-  {
-    name: { type: String, required: true },
-    email: { type: String, required: true },
-    specialization: { type: String },
-    employed: { type: Boolean, default: false },
-    employer: { type: String },
-    bio: { type: String },
-    avatarUrl: { type: String },
-    projects: { type: [String], default: [] },
-  },
-  { timestamps: true }
-);
+const StudentSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  specialization: String,
+  bio: String,
+  avatarUrl: String,
+  projectLink: String, // main latest project link
+  originalityScore: Number, // latest score
+  projects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Project" }], // list of projects
+});
 
-const Student = models.Student || model("Student", StudentSchema);
-
-export default Student;
+export default mongoose.models.Student || mongoose.model("Student", StudentSchema);
