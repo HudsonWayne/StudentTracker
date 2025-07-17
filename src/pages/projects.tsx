@@ -1,85 +1,118 @@
-"use client";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-import { useState } from "react";
+export default function SubmitProject() {
+  const [students, setStudents] = useState([]);
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    link: "",
+    category: "",
+    studentId: "",
+  });
+  const [message, setMessage] = useState("");
 
-export default function SubmitProjectPage() {
-  const [email, setEmail] = useState("");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [link, setLink] = useState("");
-  const [category, setCategory] = useState("Development");
+  useEffect(() => {
+    const fetchStudents = async () => {
+      const res = await axios.get("/api/students");
+      setStudents(res.data.data);
+    };
+    fetchStudents();
+  }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleChange = (e: any) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setMessage("");
 
-    const res = await fetch("/api/projects", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, title, description, link, category }),
-    });
-
-    const data = await res.json();
-    alert(data.message);
+    try {
+      const res = await axios.post("/api/projects", formData);
+      if (res.data.success) {
+        setMessage("✅ Project submitted successfully!");
+        setFormData({
+          title: "",
+          description: "",
+          link: "",
+          category: "",
+          studentId: "",
+        });
+      }
+    } catch (error: any) {
+      setMessage(`❌ ${error.response?.data?.message || "Submission failed"}`);
+    }
   };
 
   return (
-    <div className="max-w-xl mx-auto p-4">
+    <div className="max-w-xl mx-auto p-6 bg-white rounded shadow">
       <h1 className="text-2xl font-bold mb-4">💡 Submit Your Project</h1>
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-4 bg-white p-4 rounded shadow"
-      >
+
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block font-medium">👤 Your Email</label>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+          <label className="block font-semibold">👤 Select Your Student Email</label>
+          <select
+            name="studentId"
+            value={formData.studentId}
+            onChange={handleChange}
             className="w-full border p-2 rounded"
-          />
+            required
+          >
+            <option value="">-- Select Email --</option>
+            {students.map((student: any) => (
+              <option key={student._id} value={student._id}>
+                {student.email}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div>
-          <label className="block font-medium">Project Title</label>
+          <label className="block font-semibold">Project Title</label>
           <input
             type="text"
-            required
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
             className="w-full border p-2 rounded"
+            required
           />
         </div>
 
         <div>
-          <label className="block font-medium">Project Description</label>
+          <label className="block font-semibold">Project Description</label>
           <textarea
-            required
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
             className="w-full border p-2 rounded"
             rows={4}
           ></textarea>
         </div>
 
         <div>
-          <label className="block font-medium">Project Link</label>
+          <label className="block font-semibold">Project Link (e.g., GitHub, Behance)</label>
           <input
             type="url"
-            value={link}
-            onChange={(e) => setLink(e.target.value)}
-            placeholder="https://github.com/..."
+            name="link"
+            value={formData.link}
+            onChange={handleChange}
             className="w-full border p-2 rounded"
+            required
           />
         </div>
 
         <div>
-          <label className="block font-medium">Category</label>
+          <label className="block font-semibold">Category</label>
           <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
             className="w-full border p-2 rounded"
+            required
           >
+            <option value="">-- Select Category --</option>
             <option value="Design">Design</option>
             <option value="Development">Development</option>
             <option value="Marketing">Marketing</option>
@@ -88,11 +121,15 @@ export default function SubmitProjectPage() {
 
         <button
           type="submit"
-          className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
         >
           🚀 Submit Project
         </button>
       </form>
+
+      {message && (
+        <p className="mt-4 text-center text-red-600 font-semibold">{message}</p>
+      )}
     </div>
   );
 }
