@@ -19,16 +19,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     case "POST":
       try {
-        const { title, description, studentId } = req.body;
+        const { title, description, link, category, studentId } = req.body;
 
-        // Simple validation
-        if (!title || !studentId) {
-          return res.status(400).json({ success: false, message: "Title and studentId are required" });
+        if (!title || !studentId || !link || !category) {
+          return res.status(400).json({ success: false, message: "Missing required fields" });
         }
 
-        const project = await Project.create({ title, description, studentId });
+        const project = await Project.create({ title, description, link, category, studentId });
 
-        // Link project to student
         await Student.findByIdAndUpdate(studentId, {
           $push: { projects: project._id },
         });

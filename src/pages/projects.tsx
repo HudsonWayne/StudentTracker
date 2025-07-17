@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 
 export default function SubmitProjectPage() {
@@ -24,7 +25,10 @@ export default function SubmitProjectPage() {
   return (
     <div className="max-w-xl mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">💡 Submit Your Project</h1>
-      <form onSubmit={handleSubmit} className="space-y-4 bg-white p-4 rounded shadow">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4 bg-white p-4 rounded shadow"
+      >
         <div>
           <label className="block font-medium">👤 Your Email</label>
           <input
@@ -35,15 +39,18 @@ export default function SubmitProjectPage() {
             className="w-full border p-2 rounded"
           />
         </div>
+
         <div>
           <label className="block font-medium">Project Title</label>
           <input
+            type="text"
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="w-full border p-2 rounded"
           />
         </div>
+
         <div>
           <label className="block font-medium">Project Description</label>
           <textarea
@@ -51,17 +58,21 @@ export default function SubmitProjectPage() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="w-full border p-2 rounded"
-          />
+            rows={4}
+          ></textarea>
         </div>
+
         <div>
           <label className="block font-medium">Project Link</label>
           <input
+            type="url"
             value={link}
             onChange={(e) => setLink(e.target.value)}
             placeholder="https://github.com/..."
             className="w-full border p-2 rounded"
           />
         </div>
+
         <div>
           <label className="block font-medium">Category</label>
           <select
@@ -69,11 +80,12 @@ export default function SubmitProjectPage() {
             onChange={(e) => setCategory(e.target.value)}
             className="w-full border p-2 rounded"
           >
-            <option>Design</option>
-            <option>Development</option>
-            <option>Marketing</option>
+            <option value="Design">Design</option>
+            <option value="Development">Development</option>
+            <option value="Marketing">Marketing</option>
           </select>
         </div>
+
         <button
           type="submit"
           className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
