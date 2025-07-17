@@ -1,3 +1,4 @@
+// File: /pages/api/projects/index.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "@/lib/db";
 import Project from "@/models/Project";
@@ -8,52 +9,38 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   switch (req.method) {
     case "GET":
-      const projects = await Project.find({}).populate("studentId");
-      return res.status(200).json({ success: true, data: projects });
+      try {
+        const projects = await Project.find({}).populate("studentId", "name email");
+        res.status(200).json({ success: true, data: projects });
+      } catch (error) {
+        res.status(500).json({ success: false, error });
+      }
+      break;
 
     case "POST":
       try {
-        const { email, title, description, link, category } = req.body;
+        const { title, description, studentId } = req.body;
 
-        // Find student by email
-        const student = await Student.findOne({ email });
-
-        if (!student) {
-          return res.status(404).json({ success: false, error: "Student with this email not found." });
+        // Simple validation
+        if (!title || !studentId) {
+          return res.status(400).json({ success: false, message: "Title and studentId are required" });
         }
 
-        // Simulated originality score
-        const originalityScore = Math.floor(Math.random() * 40) + 60; // 60–100
+        const project = await Project.create({ title, description, studentId });
 
-        // Create project and associate with student
-        const project = await Project.create({
-          studentId: student._id,
-          title,
-          description,
-          link,
-          category,
-          originalityScore,
+        // Link project to student
+        await Student.findByIdAndUpdate(studentId, {
+          $push: { projects: project._id },
         });
 
-        // Update student document
-        student.projectLink = link;
-        student.originalityScore = originalityScore;
-
-        // If you want to store multiple projects
-        if (!student.projects) {
-          student.projects = [];
-        }
-        student.projects.push(project._id);
-
-        await student.save();
-
-        return res.status(201).json({ success: true, data: project });
+        res.status(201).json({ success: true, data: project });
       } catch (error) {
-        console.error("Project submission error:", error);
-        return res.status(400).json({ success: false, error: error.message });
+        res.status(400).json({ success: false, error });
       }
+      break;
 
     default:
-      return res.status(400).json({ success: false, error: "Unsupported method" });
+      res.status(405).json({ success: false, message: "Method Not Allowed" });
+      break;
   }
 }
