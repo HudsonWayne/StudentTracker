@@ -117,11 +117,9 @@ export default function SubmitProject() {
             className="w-full p-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
           >
             <option value="">-- Select Category --</option>
-            <option value="Web">Web</option>
-            <option value="Mobile">Mobile</option>
-            <option value="Game">Game</option>
-            <option value="AI">AI</option>
-            <option value="Other">Other</option>
+            <option value="Software Development">Software Development</option>
+            <option value="Design">Design</option>
+            <option value="Digital Marketing">Digital Marketing</option>
           </select>
         </div>
 
