@@ -1,4 +1,3 @@
-// File: /pages/api/projects/index.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "@/lib/db";
 import Project from "@/models/Project";
