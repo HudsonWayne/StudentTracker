@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -14,7 +16,7 @@ export default function SubmitProject() {
 
   useEffect(() => {
     axios.get("/api/students").then((res) => {
-      setStudents(res.data.data);
+      setStudents(res.data.data || []);
     });
   }, []);
 
@@ -25,13 +27,13 @@ export default function SubmitProject() {
     setErrorMessage("");
 
     if (!title || !studentId || !link || !category) {
-      setErrorMessage("Please fill in all required fields.");
+      setErrorMessage("❌ Please fill in all required fields.");
       setLoading(false);
       return;
     }
 
     try {
-      const response = await axios.post("/api/projects", {
+      const res = await axios.post("/api/projects", {
         title,
         description,
         link,
@@ -39,7 +41,7 @@ export default function SubmitProject() {
         studentId,
       });
 
-      if (response.data.success) {
+      if (res.data.success) {
         setSuccessMessage("✅ Project submitted successfully!");
         setTitle("");
         setDescription("");
@@ -49,23 +51,34 @@ export default function SubmitProject() {
       } else {
         setErrorMessage("❌ Submission failed. Try again.");
       }
-    } catch (err) {
-      setErrorMessage("❌ Error submitting project.");
+    } catch (error: any) {
+      setErrorMessage(
+        `❌ ${
+          error.response?.data?.message || "Something went wrong during submission."
+        }`
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-6 rounded-2xl shadow-lg bg-white border border-gray-200">
-      <h2 className="text-3xl font-bold text-center mb-6 text-purple-700">💡 Submit Your Project</h2>
+    <div className="max-w-2xl mx-auto mt-10 p-6 rounded-2xl shadow-xl bg-white border border-gray-200">
+      <h2 className="text-3xl font-bold text-center mb-6 text-purple-700">
+        💡 Submit Your Project
+      </h2>
+
       <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Student Email */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">👤 Select Your Student Email</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            👤 Select Your Student Email
+          </label>
           <select
             value={studentId}
             onChange={(e) => setStudentId(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
+            required
           >
             <option value="">-- Select Email --</option>
             {students.map((student: any) => (
@@ -76,45 +89,60 @@ export default function SubmitProject() {
           </select>
         </div>
 
+        {/* Title */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">📌 Project Title</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            📌 Project Title
+          </label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
             placeholder="e.g. Portfolio Website"
+            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
+            required
           />
         </div>
 
+        {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">📝 Project Description</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            📝 Project Description
+          </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
             placeholder="Short description of the project"
             rows={3}
+            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
           />
         </div>
 
+        {/* Link */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">🔗 Project Link (e.g., GitHub, Behance)</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            🔗 Project Link (GitHub, Behance, etc.)
+          </label>
           <input
             type="url"
             value={link}
             onChange={(e) => setLink(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
             placeholder="https://github.com/yourproject"
+            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
+            required
           />
         </div>
 
+        {/* Category */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">🎨 Category</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            🎨 Category
+          </label>
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
+            required
           >
             <option value="">-- Select Category --</option>
             <option value="Software Development">Software Development</option>
@@ -123,6 +151,7 @@ export default function SubmitProject() {
           </select>
         </div>
 
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={loading}
@@ -132,11 +161,20 @@ export default function SubmitProject() {
               : "bg-purple-600 hover:bg-purple-700"
           }`}
         >
-          {loading ? "Submitting..." : "🚀 Submit Project"}
+          {loading ? "⏳ Submitting..." : "🚀 Submit Project"}
         </button>
 
-        {successMessage && <p className="text-green-600 text-center mt-2">{successMessage}</p>}
-        {errorMessage && <p className="text-red-600 text-center mt-2">{errorMessage}</p>}
+        {/* Feedback */}
+        {successMessage && (
+          <p className="text-green-600 text-center mt-2 font-medium">
+            {successMessage}
+          </p>
+        )}
+        {errorMessage && (
+          <p className="text-red-600 text-center mt-2 font-medium">
+            {errorMessage}
+          </p>
+        )}
       </form>
     </div>
   );
