@@ -1,3 +1,4 @@
+// /pages/api/projects/rankings.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "@/lib/db";
 import Project from "@/models/Project";
@@ -6,38 +7,20 @@ import Student from "@/models/Student";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await dbConnect();
 
-  switch (req.method) {
-    case "GET":
-      try {
-        const projects = await Project.find({}).populate("studentId", "name email");
-        res.status(200).json({ success: true, data: projects });
-      } catch (error) {
-        res.status(500).json({ success: false, error });
-      }
-      break;
+  try {
+    const { category } = req.query;
 
-    case "POST":
-      try {
-        const { title, description, link, category, studentId } = req.body;
+    if (!category) {
+      return res.status(400).json({ success: false, message: "Category is required" });
+    }
 
-        if (!title || !studentId || !link || !category) {
-          return res.status(400).json({ success: false, message: "Missing required fields" });
-        }
+    // Get projects in category, sort by totalScore descending
+    const projects = await Project.find({ category })
+      .populate("studentId", "name email")
+      .sort({ totalScore: -1 });
 
-        const project = await Project.create({ title, description, link, category, studentId });
-
-        await Student.findByIdAndUpdate(studentId, {
-          $push: { projects: project._id },
-        });
-
-        res.status(201).json({ success: true, data: project });
-      } catch (error) {
-        res.status(400).json({ success: false, error });
-      }
-      break;
-
-    default:
-      res.status(405).json({ success: false, message: "Method Not Allowed" });
-      break;
+    res.status(200).json({ success: true, data: projects });
+  } catch (error) {
+    res.status(500).json({ success: false, error });
   }
 }
