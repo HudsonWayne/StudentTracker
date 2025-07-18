@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import axios from "axios";
 
 export default function SubmitProject() {
@@ -64,10 +65,20 @@ export default function SubmitProject() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-6 rounded-2xl shadow-xl bg-white border border-gray-100">
-      <h2 className="text-3xl font-bold text-center mb-6 text-blue-700">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="max-w-2xl mx-auto mt-10 p-6 rounded-2xl shadow-xl bg-white border border-gray-100"
+    >
+      <motion.h2
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="text-3xl font-bold text-center mb-6 text-blue-700"
+      >
         💡 Submit Your Project
-      </h2>
+      </motion.h2>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Email */}
@@ -153,9 +164,11 @@ export default function SubmitProject() {
         </div>
 
         {/* Submit */}
-        <button
+        <motion.button
           type="submit"
           disabled={loading}
+          whileHover={{ scale: loading ? 1 : 1.02 }}
+          whileTap={{ scale: loading ? 1 : 0.98 }}
           className={`w-full py-2 px-4 font-bold rounded-lg text-white transition ${
             loading
               ? "bg-blue-300 cursor-not-allowed"
@@ -163,20 +176,33 @@ export default function SubmitProject() {
           }`}
         >
           {loading ? "⏳ Submitting..." : "🚀 Submit Project"}
-        </button>
+        </motion.button>
 
-        {/* Feedback */}
-        {successMessage && (
-          <p className="text-green-600 text-center mt-2 font-medium">
-            {successMessage}
-          </p>
-        )}
-        {errorMessage && (
-          <p className="text-red-600 text-center mt-2 font-medium">
-            {errorMessage}
-          </p>
-        )}
+        {/* Feedback Messages */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: successMessage || errorMessage ? 1 : 0 }}
+        >
+          {successMessage && (
+            <motion.p
+              initial={{ y: 10 }}
+              animate={{ y: 0 }}
+              className="text-green-600 text-center mt-2 font-medium"
+            >
+              {successMessage}
+            </motion.p>
+          )}
+          {errorMessage && (
+            <motion.p
+              initial={{ y: 10 }}
+              animate={{ y: 0 }}
+              className="text-red-600 text-center mt-2 font-medium"
+            >
+              {errorMessage}
+            </motion.p>
+          )}
+        </motion.div>
       </form>
-    </div>
+    </motion.div>
   );
 }
