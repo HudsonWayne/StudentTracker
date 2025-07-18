@@ -54,7 +54,8 @@ export default function SubmitProject() {
     } catch (error: any) {
       setErrorMessage(
         `❌ ${
-          error.response?.data?.message || "Something went wrong during submission."
+          error.response?.data?.message ||
+          "Something went wrong during submission."
         }`
       );
     } finally {
@@ -63,13 +64,13 @@ export default function SubmitProject() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-6 rounded-2xl shadow-xl bg-white border border-gray-200">
-      <h2 className="text-3xl font-bold text-center mb-6 text-purple-700">
+    <div className="max-w-2xl mx-auto mt-10 p-6 rounded-2xl shadow-xl bg-white border border-gray-100">
+      <h2 className="text-3xl font-bold text-center mb-6 text-blue-700">
         💡 Submit Your Project
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-5">
-        {/* Student Email */}
+        {/* Email */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             👤 Select Your Student Email
@@ -77,7 +78,7 @@ export default function SubmitProject() {
           <select
             value={studentId}
             onChange={(e) => setStudentId(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
+            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
             required
           >
             <option value="">-- Select Email --</option>
@@ -99,7 +100,7 @@ export default function SubmitProject() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g. Portfolio Website"
-            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
+            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
@@ -114,7 +115,7 @@ export default function SubmitProject() {
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Short description of the project"
             rows={3}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
+            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
@@ -128,7 +129,7 @@ export default function SubmitProject() {
             value={link}
             onChange={(e) => setLink(e.target.value)}
             placeholder="https://github.com/yourproject"
-            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
+            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
             required
           />
         </div>
@@ -141,7 +142,7 @@ export default function SubmitProject() {
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
+            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
             required
           >
             <option value="">-- Select Category --</option>
@@ -151,14 +152,14 @@ export default function SubmitProject() {
           </select>
         </div>
 
-        {/* Submit Button */}
+        {/* Submit */}
         <button
           type="submit"
           disabled={loading}
           className={`w-full py-2 px-4 font-bold rounded-lg text-white transition ${
             loading
-              ? "bg-purple-300 cursor-not-allowed"
-              : "bg-purple-600 hover:bg-purple-700"
+              ? "bg-blue-300 cursor-not-allowed"
+              : "bg-green-600 hover:bg-green-700"
           }`}
         >
           {loading ? "⏳ Submitting..." : "🚀 Submit Project"}
