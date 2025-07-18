@@ -14,17 +14,17 @@ export default function StudentsPage() {
     AOS.init({ duration: 800, once: true });
   }, []);
 
-  if (error) return <div className="p-6 text-red-600">Failed to load students 😢</div>;
+  if (error)
+    return <div className="p-6 text-red-600">Failed to load students 😢</div>;
   if (!data) return <div className="p-6">Loading...</div>;
 
-  // Assign fake points for demonstration
-  const studentsWithPoints = data.data.map((student: any) => ({
-    ...student,
-    points: Math.floor(Math.random() * 100) + 20, // random points from 20 to 120
-  }));
-
-  // Sort students by points descending
-  const rankedStudents = [...studentsWithPoints].sort((a, b) => b.points - a.points);
+  // Group students by specialization (department)
+  const groupedBySpecialization = data.data.reduce((acc: Record<string, any[]>, student: any) => {
+    const key = student.specialization || "General";
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(student);
+    return acc;
+  }, {});
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 p-6 relative">
@@ -53,38 +53,56 @@ export default function StudentsPage() {
         </button>
 
         {showScoreboard && (
-          <div
-            className="bg-white border border-gray-300 rounded-lg p-6 mb-8 shadow-xl"
-            data-aos="fade-up"
-          >
-            <h2 className="text-2xl font-bold mb-4 text-green-700">🏅 Student Scoreboard</h2>
-            <ul className="space-y-2">
-              {rankedStudents.map((student, idx) => (
-                <li
-                  key={student._id}
-                  className="flex justify-between bg-gray-50 border rounded p-3 shadow-sm hover:bg-gray-100 transition"
+          <div className="space-y-8 mb-8">
+            {Object.entries(groupedBySpecialization).map(([dept, students]) => {
+              // Sort students descending by totalScore
+              const ranked = [...students].sort(
+                (a, b) => b.totalScore - a.totalScore
+              );
+
+              return (
+                <div
+                  key={dept}
+                  className="bg-white border border-gray-300 rounded-lg p-6 shadow-xl"
+                  data-aos="fade-up"
                 >
-                  <div>
-                    <span className="font-bold">{idx + 1}. {student.name}</span>
-                    <span className="ml-2 text-gray-500">({student.specialization})</span>
-                    {idx === 0 && (
-                      <span className="ml-2 px-2 py-1 bg-yellow-300 text-yellow-900 rounded text-xs">
-                        Top Performer ⭐
-                      </span>
-                    )}
-                    {idx === rankedStudents.length - 1 && (
-                      <span className="ml-2 px-2 py-1 bg-red-300 text-red-800 rounded text-xs">
-                        Needs Support 💪
-                      </span>
-                    )}
-                  </div>
-                  <div className="font-mono text-blue-600">{student.points} pts</div>
-                </li>
-              ))}
-            </ul>
+                  <h2 className="text-2xl font-bold mb-4 text-green-700">
+                    {dept} Scoreboard
+                  </h2>
+                  <ul className="space-y-2">
+                    {ranked.map((student, idx) => (
+                      <li
+                        key={student._id}
+                        className="flex justify-between bg-gray-50 border rounded p-3 shadow-sm hover:bg-gray-100 transition"
+                      >
+                        <div>
+                          <span className="font-bold">
+                            {idx + 1}. {student.name}
+                          </span>
+                          {idx === 0 && (
+                            <span className="ml-2 px-2 py-1 bg-yellow-300 text-yellow-900 rounded text-xs">
+                              Top Performer ⭐
+                            </span>
+                          )}
+                          {idx === ranked.length - 1 && (
+                            <span className="ml-2 px-2 py-1 bg-red-300 text-red-800 rounded text-xs">
+                              Needs Support 💪
+                            </span>
+                          )}
+                        </div>
+                        <div className="font-mono text-blue-600">
+                          {student.totalScore} pts
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
           </div>
         )}
 
+        {/* Students Grid with Images */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {data.data.map((student: any) => (
             <div
