@@ -14,11 +14,10 @@ export default function StudentsPage() {
     AOS.init({ duration: 800, once: true });
   }, []);
 
-  if (error)
-    return <div className="p-6 text-red-600">Failed to load students 😢</div>;
+  if (error) return <div className="p-6 text-red-600">Failed to load students 😢</div>;
   if (!data) return <div className="p-6">Loading...</div>;
 
-  // Group students by specialization (department)
+  // Group students by specialization
   const groupedBySpecialization = data.data.reduce((acc: Record<string, any[]>, student: any) => {
     const key = student.specialization || "General";
     if (!acc[key]) acc[key] = [];
@@ -29,46 +28,39 @@ export default function StudentsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 p-6 relative">
       <div className="max-w-7xl mx-auto">
-        <h1
-          className="text-4xl font-extrabold mb-6 text-blue-700 text-center"
-          data-aos="fade-down"
-        >
+        <h1 className="text-4xl font-extrabold mb-6 text-blue-700 text-center" data-aos="fade-down">
           🌟 Meet Our Talented Students
         </h1>
 
-        <Link
-          href="/"
-          className="inline-block mb-4 px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow transition hover:scale-105 active:scale-95"
-          data-aos="fade-up"
-        >
-          ← Back to Home
-        </Link>
+        <div className="flex flex-wrap justify-between items-center mb-6">
+          <Link
+            href="/"
+            className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow transition hover:scale-105 active:scale-95"
+            data-aos="fade-up"
+          >
+            ← Back to Home
+          </Link>
 
-        <button
-          onClick={() => setShowScoreboard(!showScoreboard)}
-          className="mb-8 px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded shadow transition hover:scale-105 active:scale-95 ml-4"
-          data-aos="fade-up"
-        >
-          🏆 {showScoreboard ? "Hide" : "Show"} Scoreboard
-        </button>
+          <button
+            onClick={() => setShowScoreboard(!showScoreboard)}
+            className="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded shadow transition hover:scale-105 active:scale-95 ml-4"
+            data-aos="fade-up"
+          >
+            🏆 {showScoreboard ? "Hide" : "Show"} Scoreboard
+          </button>
+        </div>
 
         {showScoreboard && (
           <div className="space-y-8 mb-8">
             {Object.entries(groupedBySpecialization).map(([dept, students]) => {
-              // Sort students descending by totalScore
-              const ranked = [...students].sort(
-                (a, b) => b.totalScore - a.totalScore
-              );
-
+              const ranked = [...students].sort((a, b) => b.totalScore - a.totalScore);
               return (
                 <div
                   key={dept}
                   className="bg-white border border-gray-300 rounded-lg p-6 shadow-xl"
                   data-aos="fade-up"
                 >
-                  <h2 className="text-2xl font-bold mb-4 text-green-700">
-                    {dept} Scoreboard
-                  </h2>
+                  <h2 className="text-2xl font-bold mb-4 text-green-700">{dept} Scoreboard</h2>
                   <ul className="space-y-2">
                     {ranked.map((student, idx) => (
                       <li
@@ -90,9 +82,7 @@ export default function StudentsPage() {
                             </span>
                           )}
                         </div>
-                        <div className="font-mono text-blue-600">
-                          {student.totalScore} pts
-                        </div>
+                        <div className="font-mono text-blue-600">{student.totalScore} pts</div>
                       </li>
                     ))}
                   </ul>
@@ -102,7 +92,7 @@ export default function StudentsPage() {
           </div>
         )}
 
-        {/* Students Grid with Images */}
+        {/* Student card grid with images (NOT part of scoreboard) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {data.data.map((student: any) => (
             <div
