@@ -133,7 +133,7 @@ export default function SubmitProject() {
         {/* Link */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            🔗 Project Link (GitHub, Behance, etc.)
+            🔗 Project Link (GitHub, Behance, Figma, etc.)
           </label>
           <input
             type="url"
