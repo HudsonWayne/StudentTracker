@@ -11,7 +11,7 @@ export default function StudentsPage() {
   const [showScoreboard, setShowScoreboard] = useState(false);
 
   useEffect(() => {
-    AOS.init({ duration: 800, once: true });
+    AOS.init({ duration: 1000, once: true });
   }, []);
 
   if (error) return <div className="p-6 text-red-600">Failed to load students 😢</div>;
@@ -35,11 +35,10 @@ export default function StudentsPage() {
           🏆 Student Scoreboard
         </h1>
 
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-6" data-aos="fade-up">
           <Link
             href="/"
             className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow transition hover:scale-105 active:scale-95"
-            data-aos="fade-up"
           >
             ← Back to Home
           </Link>
@@ -47,21 +46,21 @@ export default function StudentsPage() {
           <button
             onClick={() => setShowScoreboard(!showScoreboard)}
             className="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded shadow transition hover:scale-105 active:scale-95 ml-4"
-            data-aos="fade-up"
           >
             🏆 {showScoreboard ? "Hide" : "Show"} Scoreboard
           </button>
         </div>
 
         {showScoreboard && (
-          <div className="space-y-8 mb-8">
-            {Object.entries(groupedBySpecialization).map(([dept, students]) => {
+          <div className="space-y-12 mb-12" data-aos="fade-up" data-aos-delay="200">
+            {Object.entries(groupedBySpecialization).map(([dept, students], index) => {
               const ranked = [...students].sort((a, b) => b.totalScore - a.totalScore);
               return (
                 <div
                   key={dept}
                   className="bg-white border border-gray-300 rounded-lg p-6 shadow-xl"
-                  data-aos="fade-up"
+                  data-aos="zoom-in-up"
+                  data-aos-delay={index * 100}
                 >
                   <h2 className="text-2xl font-bold mb-4 text-green-700">{dept} Scoreboard</h2>
                   <ul className="space-y-2">
@@ -69,6 +68,8 @@ export default function StudentsPage() {
                       <li
                         key={student._id}
                         className="flex justify-between items-center bg-gray-50 border rounded p-3 shadow-sm hover:bg-gray-100 transition"
+                        data-aos="fade-up"
+                        data-aos-delay={idx * 50}
                       >
                         <div>
                           <span className="font-bold">
