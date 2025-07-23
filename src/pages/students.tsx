@@ -27,12 +27,12 @@ export default function StudentsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 p-6 relative">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <h1
           className="text-4xl font-extrabold mb-6 text-blue-700 text-center"
           data-aos="fade-down"
         >
-          🏆 Student Scoreboard
+          {showScoreboard ? "🏆 Student Scoreboard" : "🌟 Meet Our Talented Students"}
         </h1>
 
         <div className="flex justify-between items-center mb-6" data-aos="fade-up">
@@ -47,11 +47,11 @@ export default function StudentsPage() {
             onClick={() => setShowScoreboard(!showScoreboard)}
             className="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded shadow transition hover:scale-105 active:scale-95 ml-4"
           >
-            🏆 {showScoreboard ? "Hide" : "Show"} Scoreboard
+            {showScoreboard ? "🙈 Hide Scoreboard" : "🏆 Show Scoreboard"}
           </button>
         </div>
 
-        {showScoreboard && (
+        {showScoreboard ? (
           <div className="space-y-12 mb-12" data-aos="fade-up" data-aos-delay="200">
             {Object.entries(groupedBySpecialization).map(([dept, students], index) => {
               const ranked = [...students].sort((a, b) => b.totalScore - a.totalScore);
@@ -93,6 +93,31 @@ export default function StudentsPage() {
                 </div>
               );
             })}
+          </div>
+        ) : (
+          // View Students (With Images)
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8" data-aos="fade-up">
+            {data.data.map((student: any, idx: number) => (
+              <div
+                key={student._id}
+                className="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden hover:scale-105 hover:shadow-2xl transition-transform duration-500"
+                data-aos="zoom-in"
+                data-aos-delay={idx * 50}
+              >
+                <img
+                  src={student.avatarUrl}
+                  alt={student.name}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="p-4">
+                  <h2 className="text-xl font-bold text-gray-800 mb-1 hover:text-blue-600 transition">
+                    {student.name}
+                  </h2>
+                  <p className="text-sm text-gray-500 mb-2">{student.specialization}</p>
+                  <p className="text-sm text-gray-600">{student.bio}</p>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
