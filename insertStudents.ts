@@ -4,10 +4,10 @@ dotenv.config({ path: ".env.local" });
 import dbConnect from "./src/lib/db.ts";
 import Student from "./src/models/Student.ts";
 
-
 async function insertStudents() {
   await dbConnect();
 
+  // Define raw students array
   const students = [
     {
       name: "Tawanda Trust Muchenu",
@@ -110,16 +110,6 @@ async function insertStudents() {
       projects: [],
     },
     {
-      name: "Mcdonald Chirumezani",
-      email: "chirumezanimcdonald@gmail.com",
-      specialization: "Software Development",
-      employed: false,
-      employer: "",
-      bio: "Passionate about problem solving, innovation and leveling up every step of the way. Currently building projects and growing every day.",
-      avatarUrl: "/students/macdonald.jpg",
-      projects: [],
-    },
-    {
       name: "Kudzaishe Chikowore",
       email: "chikoworekudzaishe9@gmail.com",
       specialization: "Software Development",
@@ -141,9 +131,14 @@ async function insertStudents() {
     },
   ];
 
+  // Remove duplicates by email
+  const uniqueStudents = Array.from(
+    new Map(students.map((s) => [s.email, s])).values()
+  );
+
   try {
-    await Student.insertMany(students);
-    console.log("✅ Students inserted successfully!");
+    await Student.insertMany(uniqueStudents, { ordered: false });
+    console.log(`✅ Inserted ${uniqueStudents.length} unique students successfully!`);
   } catch (error) {
     console.error("❌ Error inserting students:", error);
   }
