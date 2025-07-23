@@ -65,7 +65,7 @@ export default function StudentsPage() {
                     {ranked.map((student, idx) => (
                       <li
                         key={student._id}
-                        className="flex justify-between bg-gray-50 border rounded p-3 shadow-sm hover:bg-gray-100 transition"
+                        className="flex justify-between items-center bg-gray-50 border rounded p-3 shadow-sm hover:bg-gray-100 transition"
                       >
                         <div>
                           <span className="font-bold">
@@ -92,7 +92,7 @@ export default function StudentsPage() {
           </div>
         )}
 
-        {/* Student card grid with images (NOT part of scoreboard) */}
+        {/* Student grid with images (NOT part of scoreboard) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {data.data.map((student: any) => (
             <div
